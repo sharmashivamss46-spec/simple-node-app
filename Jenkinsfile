@@ -1,5 +1,4 @@
 pipeline {
-
     agent any
 
     environment {
@@ -7,11 +6,12 @@ pipeline {
         CONTAINER_NAME = "simple-node-container"
     }
 
+    stages {
 
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t $IMAGE_NAME .
+                    docker build -t $IMAGE_NAME .
                 '''
             }
         }
@@ -19,8 +19,8 @@ pipeline {
         stage('Stop Existing Container') {
             steps {
                 sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
+                    docker stop $CONTAINER_NAME || true
+                    docker rm $CONTAINER_NAME || true
                 '''
             }
         }
@@ -28,14 +28,21 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
-                docker run -d \
-                --name $CONTAINER_NAME \
-                -p 3000:3000 \
-                $IMAGE_NAME
+                    docker run -d \
+                      --name $CONTAINER_NAME \
+                      -p 3000:3000 \
+                      $IMAGE_NAME
                 '''
             }
         }
-
     }
 
+    post {
+        success {
+            echo 'Deployment Successful!'
+        }
+        failure {
+            echo 'Deployment Failed!'
+        }
+    }
 }
