@@ -7,14 +7,6 @@ pipeline {
         CONTAINER_NAME = "simple-node-container"
     }
 
-    stages {
-
-        stage('Clone Repository') {
-            steps {
-                git branch: 'main',
-                url: 'https://github.com/sharmashivamss46-spec/simple-node-app.git'
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
